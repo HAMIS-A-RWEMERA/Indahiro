@@ -20,6 +20,10 @@ import {
   FileSpreadsheet,
   Inbox,
   MessageSquareText,
+  Eye,
+  EyeOff,
+  LogOut,
+  KeyRound,
 } from 'lucide-react';
 import { ApplicationSubmission, ApplicationStatus } from '../types';
 import { Logo } from './Logo';
@@ -32,6 +36,10 @@ interface SelectionDashboardModalProps {
   onUpdateApplication: (updated: ApplicationSubmission) => void;
 }
 
+const COMMITTEE_AUTH_STORAGE_KEY = 'indahiro_committee_auth_v1';
+const AUTHORIZED_EMAIL = 'indahirofellowship@gmail.com';
+const AUTHORIZED_PASSWORD = 'indahiro@123';
+
 export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = ({
   isOpen,
   onClose,
@@ -39,9 +47,33 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
   onUpdateApplication,
 }) => {
   // Authentication / Selector Access Gate
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true); // default accessible with lock indicator
-  const [passcode, setPasscode] = useState('');
-  const [authError, setAuthError] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    return sessionStorage.getItem(COMMITTEE_AUTH_STORAGE_KEY) === 'true';
+  });
+  const [emailInput, setEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [authError, setAuthError] = useState('');
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanEmail = emailInput.trim().toLowerCase();
+    const cleanPassword = passwordInput.trim();
+
+    if (cleanEmail === AUTHORIZED_EMAIL && cleanPassword === AUTHORIZED_PASSWORD) {
+      setIsAuthenticated(true);
+      setAuthError('');
+      sessionStorage.setItem(COMMITTEE_AUTH_STORAGE_KEY, 'true');
+    } else {
+      setAuthError('Access Denied: Incorrect email or password. Authorized email is indahirofellowship@gmail.com.');
+    }
+  };
+
+  const handleSignOut = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem(COMMITTEE_AUTH_STORAGE_KEY);
+    setPasswordInput('');
+  };
 
   // Selector View State
   const [activeTab, setActiveTab] = useState<'applications' | 'compare' | 'ranking' | 'suggestions'>('applications');
@@ -236,6 +268,120 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
     window.location.href = `mailto:${OFFICIAL_INBOX_EMAIL}?subject=${subject}&body=${body}`;
   };
 
+  // If not authenticated, require institutional committee login
+  if (!isAuthenticated) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-xs">
+        <div className="bg-[#FAF8F5] w-full max-w-md rounded-2xl border border-[#D5CEC0] shadow-2xl overflow-hidden relative flex flex-col">
+          
+          {/* Top Header */}
+          <div className="p-5 sm:p-6 bg-[#0B0D11] text-white flex items-center justify-between border-b border-stone-800">
+            <div className="flex items-center space-x-3">
+              <Logo variant="dark" mode="mark" size="md" />
+              <div>
+                <span className="text-[10px] font-mono text-[#F7D875] uppercase tracking-widest block">
+                  Restricted Admissions Console
+                </span>
+                <h3 className="text-lg font-serif font-bold text-white">
+                  Selection Committee Login
+                </h3>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded text-stone-400 hover:text-white hover:bg-stone-800 transition-colors cursor-pointer"
+              aria-label="Close portal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Form */}
+          <div className="p-6 sm:p-8 space-y-5 text-stone-800">
+            <div className="flex items-start space-x-3 p-3.5 bg-[#F2EDE2] rounded-lg border border-[#DDD5C5] text-xs">
+              <Shield className="w-4 h-4 text-[#8F6E15] mt-0.5 shrink-0" />
+              <p className="text-stone-700 leading-relaxed font-light">
+                This portal contains confidential student application dossiers, legal reasoning memorandums, referee contact records, and standardized scoring rubrics. Only authorized selection jurists may enter.
+              </p>
+            </div>
+
+            {authError && (
+              <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs flex items-center space-x-2 animate-in fade-in duration-200">
+                <span className="font-bold">Error:</span>
+                <span>{authError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-stone-700 mb-1">
+                  Committee Email Address *
+                </label>
+                <div className="relative">
+                  <Mail className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="indahirofellowship@gmail.com"
+                    value={emailInput}
+                    onChange={(e) => {
+                      setEmailInput(e.target.value);
+                      setAuthError('');
+                    }}
+                    className="w-full pl-9 pr-3 py-2 bg-white border border-[#D5CEC0] rounded text-xs focus:border-[#0B1320] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold uppercase tracking-wider text-stone-700 mb-1">
+                  Security Passcode *
+                </label>
+                <div className="relative">
+                  <KeyRound className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    placeholder="Enter committee password..."
+                    value={passwordInput}
+                    onChange={(e) => {
+                      setPasswordInput(e.target.value);
+                      setAuthError('');
+                    }}
+                    className="w-full pl-9 pr-10 py-2 bg-white border border-[#D5CEC0] rounded text-xs focus:border-[#0B1320] focus:outline-none font-mono tracking-wider"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 cursor-pointer"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2.5 px-4 text-xs font-bold uppercase tracking-wider text-[#0B0D11] bg-gradient-to-r from-[#F7D875] via-[#E2B742] to-[#D5A52A] hover:brightness-105 rounded shadow-sm flex items-center justify-center space-x-2 cursor-pointer transition-all mt-2"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>Unlock Selection Console</span>
+              </button>
+            </form>
+
+            <div className="pt-2 text-center text-[11px] text-stone-500 font-mono">
+              <span>Secretariat Inquiries: </span>
+              <a href="mailto:indahirofellowship@gmail.com" className="text-stone-700 hover:underline font-semibold">
+                indahirofellowship@gmail.com
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-xs">
       <div className="bg-[#FAF8F5] w-full max-w-6xl rounded-xl border border-[#D5CEC0] shadow-2xl overflow-hidden relative max-h-[94vh] flex flex-col">
@@ -327,6 +473,16 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                 <span>Suggestions ({suggestions.length})</span>
               </button>
             </div>
+
+            {/* Lock / Sign Out Button */}
+            <button
+              onClick={handleSignOut}
+              className="px-2.5 py-1.5 text-xs text-stone-300 hover:text-white hover:bg-stone-800 rounded transition-colors flex items-center gap-1 cursor-pointer border border-stone-700/60"
+              title="Lock Selection Committee Portal"
+            >
+              <LogOut className="w-3.5 h-3.5 text-red-400" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </button>
 
             <button
               onClick={onClose}

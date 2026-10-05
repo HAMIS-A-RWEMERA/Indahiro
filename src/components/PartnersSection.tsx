@@ -128,7 +128,7 @@ export const PartnersSection: React.FC = () => {
             </p>
           </div>
           <a
-            href="mailto:niyonkuruclaude0002@gmail.com?subject=Indahiro%20Fellowship%20Partnership%20Inquiry"
+            href="mailto:indahirofellowship@gmail.com?subject=Indahiro%20Fellowship%20Partnership%20Inquiry"
             className="px-6 py-3 text-xs font-semibold uppercase tracking-wider text-[#0B1320] bg-[#C59B27] hover:bg-[#E8C568] rounded transition-colors whitespace-nowrap cursor-pointer shrink-0"
           >
             Inquire About Partnership

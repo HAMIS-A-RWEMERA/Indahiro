@@ -125,17 +125,32 @@ export const Footer: React.FC<FooterProps> = ({
                 <span>Kigali, Rwanda</span>
               </div>
 
-              <div className="pt-2 space-y-1.5">
-                <span className="text-[11px] font-mono text-stone-500 block">Direct Admissions & Secretariat Emails:</span>
-                {emails.map((email) => (
+              <div className="pt-2 space-y-2">
+                <span className="text-[11px] font-mono text-stone-400 block font-semibold">
+                  Official Secretariat & Committee Emails:
+                </span>
+                {emails.map((email, idx) => (
                   <div key={email} className="flex items-center space-x-2">
-                    <Mail className="w-3.5 h-3.5 text-stone-500 shrink-0" />
-                    <a
-                      href={`mailto:${email}`}
-                      className="text-stone-300 hover:text-[#E2B742] transition-colors font-mono text-[11px] truncate"
-                    >
-                      {email}
-                    </a>
+                    <Mail className={`w-3.5 h-3.5 shrink-0 ${idx === 0 ? 'text-[#F7D875]' : 'text-stone-500'}`} />
+                    <div className="flex items-center space-x-1.5 min-w-0">
+                      <a
+                        href={`mailto:${email}`}
+                        className={`transition-colors font-mono text-[11px] truncate ${
+                          idx === 0 ? 'text-[#F7D875] font-semibold hover:underline' : 'text-stone-300 hover:text-[#E2B742]'
+                        }`}
+                      >
+                        {email}
+                      </a>
+                      {idx === 0 ? (
+                        <span className="text-[9px] font-mono bg-[#E2B742]/20 text-[#F7D875] px-1 py-0.2 rounded shrink-0">
+                          Primary
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-mono text-stone-500 shrink-0">
+                          Committee
+                        </span>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
