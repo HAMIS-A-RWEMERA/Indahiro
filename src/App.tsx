@@ -133,7 +133,7 @@ export default function App() {
         <button
           onClick={() => setIsSuggestionModalOpen(true)}
           className="px-3.5 py-2 rounded-full text-[11px] font-medium text-stone-200 bg-[#12141A]/90 hover:bg-[#1A1D26] hover:text-white shadow-md border border-[#2B3040] transition-all flex items-center space-x-1.5 cursor-pointer backdrop-blur-xs"
-          aria-label="Submit a suggestion to rwemera30@gmail.com"
+          aria-label="Submit a suggestion to indahirofellowship@gmail.com"
         >
           <MessageSquare className="w-3.5 h-3.5 text-[#F7D875]" />
           <span>Suggestion Box</span>

@@ -10,7 +10,7 @@ interface ApplicationModalProps {
 }
 
 const DRAFT_STORAGE_KEY = 'indahiro_fellowship_app_draft_v1';
-export const OFFICIAL_ADMISSIONS_EMAIL = 'rwemera30@gmail.com';
+export const OFFICIAL_ADMISSIONS_EMAIL = 'indahirofellowship@gmail.com';
 
 export const ApplicationModal: React.FC<ApplicationModalProps> = ({
   isOpen,
@@ -160,7 +160,7 @@ export const ApplicationModal: React.FC<ApplicationModalProps> = ({
       committeeNotes: ['Application submitted via candidate portal. Ready for first-round review.'],
     };
 
-    // Forward complete dossier directly to rwemera30@gmail.com
+    // Forward complete dossier directly to indahirofellowship@gmail.com
     try {
       const response = await fetch(`https://formsubmit.co/ajax/${OFFICIAL_ADMISSIONS_EMAIL}`, {
         method: 'POST',

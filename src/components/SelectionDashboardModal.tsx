@@ -509,7 +509,7 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                       type="button"
                       onClick={() => forwardCandidateToEmail(currentApp)}
                       className="px-3 py-1.5 text-xs font-semibold text-[#0B1320] bg-[#F7D875] hover:bg-[#E2B742] rounded shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
-                      title="Send this candidate's full profile & rubric to rwemera30@gmail.com"
+                      title="Send this candidate's full profile & rubric to indahirofellowship@gmail.com"
                     >
                       <Mail className="w-3.5 h-3.5" />
                       <span>Email to Admissions Desk</span>

@@ -14,7 +14,7 @@ export const Footer: React.FC<FooterProps> = ({
   onOpenSuggestionBox,
 }) => {
   const emails = [
-    'rwemera30@gmail.com',
+    'indahirofellowship@gmail.com',
     'niyonkuruclaude0002@gmail.com',
     'theonestineunganase2@gmail.com',
     'angelocalvin100@gmail.com',

@@ -21,7 +21,7 @@ export interface SuggestionRecord {
 }
 
 export const SUGGESTIONS_STORAGE_KEY = 'indahiro_submitted_suggestions_v1';
-export const OFFICIAL_INBOX_EMAIL = 'rwemera30@gmail.com';
+export const OFFICIAL_INBOX_EMAIL = 'indahirofellowship@gmail.com';
 
 export const SuggestionBoxModal: React.FC<SuggestionBoxModalProps> = ({ isOpen, onClose }) => {
   const [fullName, setFullName] = useState('');
@@ -66,7 +66,7 @@ export const SuggestionBoxModal: React.FC<SuggestionBoxModalProps> = ({ isOpen, 
       console.error('Failed to save suggestion locally', err);
     }
 
-    // Attempt direct dispatch to rwemera30@gmail.com via FormSubmit endpoint
+    // Attempt direct dispatch to indahirofellowship@gmail.com via FormSubmit endpoint
     try {
       const response = await fetch(`https://formsubmit.co/ajax/${OFFICIAL_INBOX_EMAIL}`, {
         method: 'POST',
