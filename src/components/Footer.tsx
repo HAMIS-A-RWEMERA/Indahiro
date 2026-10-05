@@ -1,14 +1,20 @@
 import React from 'react';
-import { Mail, MapPin, ArrowUpRight, Scale, ShieldCheck } from 'lucide-react';
+import { Mail, MapPin, ArrowUpRight, Scale, ShieldCheck, MessageSquare } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface FooterProps {
   onOpenApplication: () => void;
   onOpenDashboard: () => void;
+  onOpenSuggestionBox: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenApplication, onOpenDashboard }) => {
+export const Footer: React.FC<FooterProps> = ({
+  onOpenApplication,
+  onOpenDashboard,
+  onOpenSuggestionBox,
+}) => {
   const emails = [
+    'rwemera30@gmail.com',
     'niyonkuruclaude0002@gmail.com',
     'theonestineunganase2@gmail.com',
     'angelocalvin100@gmail.com',
@@ -34,12 +40,19 @@ export const Footer: React.FC<FooterProps> = ({ onOpenApplication, onOpenDashboa
               From understanding the law to knowing how to use it. A selective incubator instilling courtroom poise, advocacy excellence, practical legal writing, and integrity across Rwanda’s justice sector.
             </p>
 
-            <div className="pt-2 flex items-center space-x-3">
+            <div className="pt-2 flex flex-wrap items-center gap-2.5">
               <button
                 onClick={onOpenApplication}
-                className="px-5 py-2 text-xs font-bold uppercase tracking-wider text-[#0B0D11] bg-gradient-to-r from-[#F7D875] via-[#E2B742] to-[#D5A52A] hover:brightness-105 rounded transition-all cursor-pointer"
+                className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0B0D11] bg-gradient-to-r from-[#F7D875] via-[#E2B742] to-[#D5A52A] hover:brightness-105 rounded transition-all cursor-pointer"
               >
                 Apply for Fellowship
+              </button>
+              <button
+                onClick={onOpenSuggestionBox}
+                className="px-3.5 py-2 text-xs text-stone-300 hover:text-white bg-[#141823] hover:bg-[#1B2232] border border-[#2A3245] rounded transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <MessageSquare className="w-3.5 h-3.5 text-[#F7D875]" />
+                <span>Suggestion Box</span>
               </button>
               <button
                 onClick={onOpenDashboard}

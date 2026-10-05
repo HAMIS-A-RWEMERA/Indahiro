@@ -123,7 +123,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenApplication }) =
               <h2 className="text-lg font-serif text-white font-medium">2. Who is it for?</h2>
             </div>
             <p className="text-sm text-stone-300 leading-relaxed font-light">
-              Ambitious law students enrolled in Rwandan universities (UR, ULK, UNILAK, INES) who possess disciplined intellectual curiosity, competitive grit, integrity, and the drive to excel at the highest echelons of the legal profession.
+              Ambitious law students enrolled in Rwandan universities (UR, University of Kigali, Mount Kigali University, ULK, UNILAK, INES) who possess disciplined intellectual curiosity, competitive grit, integrity, and the drive to excel at the highest echelons of the legal profession.
             </p>
           </div>
 

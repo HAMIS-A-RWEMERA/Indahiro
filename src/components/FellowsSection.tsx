@@ -8,7 +8,15 @@ export const FellowsSection: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUni, setSelectedUni] = useState<string>('All');
 
-  const universities = ['All', 'University of Rwanda', 'ULK', 'UNILAK', 'INES Ruhengeri'];
+  const universities = [
+    'All',
+    'University of Rwanda',
+    'University of Kigali',
+    'Mount Kigali University',
+    'ULK',
+    'UNILAK',
+    'INES Ruhengeri',
+  ];
 
   const filteredFellows = INAUGURAL_FELLOWS.filter((fellow) => {
     const matchesSearch =

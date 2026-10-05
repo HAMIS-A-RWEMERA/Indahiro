@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { Menu, X, ShieldCheck } from 'lucide-react';
+import { Menu, X, ShieldCheck, MessageSquare } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface HeaderProps {
   onOpenApplication: () => void;
   onOpenDashboard: () => void;
+  onOpenSuggestionBox: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenApplication, onOpenDashboard }) => {
+export const Header: React.FC<HeaderProps> = ({
+  onOpenApplication,
+  onOpenDashboard,
+  onOpenSuggestionBox,
+}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -36,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenApplication, onOpenDashboa
           </a>
 
           {/* Zone 2: Clean text navigation links */}
-          <nav className="hidden lg:flex items-center space-x-7 text-sm font-medium text-stone-300">
+          <nav className="hidden xl:flex items-center space-x-6 text-sm font-medium text-stone-300">
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -49,10 +54,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenApplication, onOpenDashboa
           </nav>
 
           {/* Zone 3: Primary actions */}
-          <div className="hidden sm:flex items-center space-x-3">
+          <div className="hidden sm:flex items-center space-x-2.5">
+            <button
+              onClick={onOpenSuggestionBox}
+              className="px-3 py-2 text-xs font-medium text-stone-300 hover:text-white bg-[#151821] hover:bg-[#1E2330] border border-[#2B3040] rounded transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+              title="Submit a recommendation or idea to the Secretariat"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-[#F7D875]" />
+              <span>Suggestion Box</span>
+            </button>
             <button
               onClick={onOpenDashboard}
-              className="px-3.5 py-2 text-xs font-medium text-stone-300 hover:text-white bg-[#151821] hover:bg-[#1E2330] border border-[#2B3040] rounded transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
+              className="px-3 py-2 text-xs font-medium text-stone-300 hover:text-white bg-[#151821] hover:bg-[#1E2330] border border-[#2B3040] rounded transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
               title="Access Selection Committee Portal"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-[#E2B742]" />
@@ -60,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenApplication, onOpenDashboa
             </button>
             <button
               onClick={onOpenApplication}
-              className="px-5 py-2 text-xs font-bold uppercase tracking-wider text-[#0D0E11] bg-gradient-to-r from-[#F7D875] via-[#E2B742] to-[#D5A52A] hover:brightness-105 rounded shadow-sm transition-all duration-150 whitespace-nowrap cursor-pointer"
+              className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0D0E11] bg-gradient-to-r from-[#F7D875] via-[#E2B742] to-[#D5A52A] hover:brightness-105 rounded shadow-sm transition-all duration-150 whitespace-nowrap cursor-pointer"
             >
               Apply for Fellowship
             </button>
@@ -68,6 +81,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenApplication, onOpenDashboa
 
           {/* Mobile menu button */}
           <div className="flex items-center sm:hidden space-x-2">
+            <button
+              onClick={onOpenSuggestionBox}
+              className="px-2.5 py-1.5 text-xs text-stone-300 bg-[#151821] border border-[#2B3040] rounded flex items-center gap-1"
+            >
+              <MessageSquare className="w-3 h-3 text-[#F7D875]" />
+              <span>Ideas</span>
+            </button>
             <button
               onClick={onOpenApplication}
               className="px-3 py-1.5 text-xs font-bold text-[#0D0E11] bg-[#E2B742] rounded"
@@ -87,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenApplication, onOpenDashboa
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#12141A] border-b border-[#22252E] px-4 pt-3 pb-6 space-y-2">
+        <div className="xl:hidden bg-[#12141A] border-b border-[#22252E] px-4 pt-3 pb-6 space-y-2">
           {navLinks.map((link) => (
             <a
               key={link.label}
@@ -99,6 +119,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenApplication, onOpenDashboa
             </a>
           ))}
           <div className="pt-4 border-t border-[#22252E] flex flex-col gap-2">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenSuggestionBox();
+              }}
+              className="w-full py-2.5 text-xs font-medium text-stone-200 bg-[#1A1F2C] border border-[#2F374A] rounded flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <MessageSquare className="w-4 h-4 text-[#F7D875]" />
+              <span>Suggestion Box (Secretariat)</span>
+            </button>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);

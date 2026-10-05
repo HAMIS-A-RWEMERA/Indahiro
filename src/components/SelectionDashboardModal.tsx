@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   Shield,
@@ -15,9 +15,15 @@ import {
   Unlock,
   ChevronRight,
   MessageSquare,
+  Download,
+  Mail,
+  FileSpreadsheet,
+  Inbox,
+  MessageSquareText,
 } from 'lucide-react';
 import { ApplicationSubmission, ApplicationStatus } from '../types';
 import { Logo } from './Logo';
+import { SUGGESTIONS_STORAGE_KEY, SuggestionRecord, OFFICIAL_INBOX_EMAIL } from './SuggestionBoxModal';
 
 interface SelectionDashboardModalProps {
   isOpen: boolean;
@@ -38,7 +44,7 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
   const [authError, setAuthError] = useState(false);
 
   // Selector View State
-  const [activeTab, setActiveTab] = useState<'applications' | 'compare' | 'ranking'>('applications');
+  const [activeTab, setActiveTab] = useState<'applications' | 'compare' | 'ranking' | 'suggestions'>('applications');
   const [selectedAppId, setSelectedAppId] = useState<string>(applications[0]?.id || '');
   const [statusFilter, setStatusFilter] = useState<string>('All');
   const [uniFilter, setUniFilter] = useState<string>('All');
@@ -50,6 +56,22 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
 
   // Active App Note Input
   const [newComment, setNewComment] = useState('');
+
+  // Suggestions state
+  const [suggestions, setSuggestions] = useState<SuggestionRecord[]>([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      try {
+        const raw = localStorage.getItem(SUGGESTIONS_STORAGE_KEY);
+        if (raw) {
+          setSuggestions(JSON.parse(raw));
+        }
+      } catch (err) {
+        console.error('Error loading suggestions', err);
+      }
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -123,6 +145,97 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
   const compareAppA = applications.find((a) => a.id === compareIdA) || applications[0];
   const compareAppB = applications.find((a) => a.id === compareIdB) || applications[1] || applications[0];
 
+  const exportToCSV = () => {
+    const headers = [
+      'Application ID',
+      'Submitted At',
+      'Status',
+      'Full Name',
+      'Email',
+      'Phone',
+      'University',
+      'Year of Study',
+      'Programme',
+      'GPA/Class',
+      'Total Score',
+      'Moot Experience',
+      'Why Indahiro',
+      'Legal Problem',
+      'Case Memorandum',
+      'Referee Name',
+      'Referee Email',
+      'Referee Phone',
+    ];
+
+    const rows = applications.map((app) => [
+      `"${app.id}"`,
+      `"${app.submittedAt}"`,
+      `"${app.status}"`,
+      `"${(app.personal?.fullName || '').replace(/"/g, '""')}"`,
+      `"${(app.personal?.email || '').replace(/"/g, '""')}"`,
+      `"${(app.personal?.phone || '').replace(/"/g, '""')}"`,
+      `"${(app.personal?.university || '').replace(/"/g, '""')}"`,
+      `"${(app.personal?.yearOfStudy || '').replace(/"/g, '""')}"`,
+      `"${(app.academic?.programme || '').replace(/"/g, '""')}"`,
+      `"${(app.academic?.gpaOrClass || '').replace(/"/g, '""')}"`,
+      `"${getAppTotal(app)}"`,
+      `"${(app.experience?.mootCourt || '').replace(/"/g, '""')}"`,
+      `"${(app.motivation?.whyIndahiro || '').replace(/"/g, '""')}"`,
+      `"${(app.motivation?.legalProblemCareAbout || '').replace(/"/g, '""')}"`,
+      `"${(app.practicalAssessment?.answer || '').replace(/"/g, '""')}"`,
+      `"${(app.references?.refereeName || '').replace(/"/g, '""')}"`,
+      `"${(app.references?.refereeEmail || '').replace(/"/g, '""')}"`,
+      `"${(app.references?.refereePhone || '').replace(/"/g, '""')}"`,
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `indahiro_cohort1_applicants_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportToJSON = () => {
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(applications, null, 2));
+    const link = document.createElement('a');
+    link.setAttribute('href', dataStr);
+    link.setAttribute('download', `indahiro_applications_dossier_${new Date().toISOString().slice(0, 10)}.json`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const forwardCandidateToEmail = (app: ApplicationSubmission) => {
+    const subject = encodeURIComponent(`[Indahiro Candidate Dossier] ${app.personal.fullName} (${app.id})`);
+    const body = encodeURIComponent(
+      `INDAHIRO FELLOWSHIP CANDIDATE DOSSIER\n` +
+      `ID: ${app.id}\n` +
+      `Name: ${app.personal.fullName}\n` +
+      `University: ${app.personal.university} (${app.personal.yearOfStudy})\n` +
+      `Email: ${app.personal.email} | Phone: ${app.personal.phone}\n` +
+      `Status: ${app.status.toUpperCase()}\n` +
+      `GPA / Class: ${app.academic.gpaOrClass}\n` +
+      `Total Rubric Score: ${getAppTotal(app)} / 100\n\n` +
+      `-- SCORES BREAKDOWN --\n` +
+      `Analytical Reasoning: ${app.scores.analyticalReasoning}/25\n` +
+      `Advocacy Potential: ${app.scores.advocacyPotential}/25\n` +
+      `Integrity & Ethics: ${app.scores.publicServiceIntegrity}/20\n` +
+      `Commitment: ${app.scores.commitmentDiscipline}/15\n` +
+      `Practical Score: ${app.scores.practicalScore}/15\n\n` +
+      `-- MOTIVATION --\n` +
+      `Why Indahiro:\n${app.motivation.whyIndahiro}\n\n` +
+      `Specific Legal Problem in Rwanda:\n${app.motivation.legalProblemCareAbout}\n\n` +
+      `-- PRACTICAL CASE MEMORANDUM --\n` +
+      `${app.practicalAssessment.answer}\n\n` +
+      `-- REFEREE --\n` +
+      `${app.references.refereeName} (${app.references.refereeInstitution}) - ${app.references.refereeEmail} / ${app.references.refereePhone}\n`
+    );
+    window.location.href = `mailto:${OFFICIAL_INBOX_EMAIL}?subject=${subject}&body=${body}`;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/85 backdrop-blur-xs">
       <div className="bg-[#FAF8F5] w-full max-w-6xl rounded-xl border border-[#D5CEC0] shadow-2xl overflow-hidden relative max-h-[94vh] flex flex-col">
@@ -132,9 +245,14 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
           <div className="flex items-center space-x-3">
             <Logo variant="dark" mode="mark" size="md" />
             <div>
-              <span className="text-[10px] font-mono text-[#F7D875] uppercase tracking-widest block">
-                Official Selection Committee Panel · Cohort I (2026/2027)
-              </span>
+              <div className="flex items-center space-x-2">
+                <span className="text-[10px] font-mono text-[#F7D875] uppercase tracking-widest block">
+                  Official Selection Committee Panel · Cohort I (2026/2027)
+                </span>
+                <span className="text-[9px] font-mono text-emerald-300 bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-800 hidden sm:inline">
+                  Inbox: {OFFICIAL_INBOX_EMAIL}
+                </span>
+              </div>
               <h3 className="text-lg font-serif font-bold text-white flex items-center gap-2">
                 <span>Indahiro Admissions & Scoring Console</span>
                 <span className="text-xs font-mono font-normal text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
@@ -144,7 +262,27 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
             </div>
           </div>
           
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Export Buttons */}
+            <div className="hidden lg:flex items-center space-x-1.5 bg-[#142032] p-1 rounded-lg border border-stone-800 text-[11px]">
+              <button
+                onClick={exportToCSV}
+                className="px-2.5 py-1 text-stone-300 hover:text-white hover:bg-stone-800 rounded transition-colors flex items-center gap-1 cursor-pointer"
+                title="Download CSV spreadsheet of all submitted applications"
+              >
+                <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Export CSV</span>
+              </button>
+              <button
+                onClick={exportToJSON}
+                className="px-2.5 py-1 text-stone-300 hover:text-white hover:bg-stone-800 rounded transition-colors flex items-center gap-1 cursor-pointer"
+                title="Download JSON dossier"
+              >
+                <Download className="w-3.5 h-3.5 text-sky-400" />
+                <span>JSON</span>
+              </button>
+            </div>
+
             {/* View switcher tabs */}
             <div className="hidden sm:flex items-center p-1 bg-[#142032] rounded-lg text-xs font-medium border border-stone-800">
               <button
@@ -177,6 +315,17 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
               >
                 Rankings & Top 10 Cutoff
               </button>
+              <button
+                onClick={() => setActiveTab('suggestions')}
+                className={`px-3 py-1.5 rounded transition-colors flex items-center gap-1.5 ${
+                  activeTab === 'suggestions'
+                    ? 'bg-[#C59B27] text-[#0B1320] font-semibold'
+                    : 'text-stone-300 hover:text-white'
+                }`}
+              >
+                <MessageSquareText className="w-3.5 h-3.5" />
+                <span>Suggestions ({suggestions.length})</span>
+              </button>
             </div>
 
             <button
@@ -189,24 +338,37 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
         </div>
 
         {/* Mobile View Switcher */}
-        <div className="sm:hidden flex p-1.5 bg-[#142032] text-xs font-medium border-b border-stone-800">
+        <div className="sm:hidden flex p-1.5 bg-[#142032] text-xs font-medium border-b border-stone-800 overflow-x-auto gap-1">
           <button
             onClick={() => setActiveTab('applications')}
-            className={`flex-1 py-1.5 text-center rounded ${activeTab === 'applications' ? 'bg-[#C59B27] text-[#0B1320] font-bold' : 'text-stone-300'}`}
+            className={`flex-1 py-1.5 px-2 text-center rounded whitespace-nowrap ${activeTab === 'applications' ? 'bg-[#C59B27] text-[#0B1320] font-bold' : 'text-stone-300'}`}
           >
             Review
           </button>
           <button
             onClick={() => setActiveTab('compare')}
-            className={`flex-1 py-1.5 text-center rounded ${activeTab === 'compare' ? 'bg-[#C59B27] text-[#0B1320] font-bold' : 'text-stone-300'}`}
+            className={`flex-1 py-1.5 px-2 text-center rounded whitespace-nowrap ${activeTab === 'compare' ? 'bg-[#C59B27] text-[#0B1320] font-bold' : 'text-stone-300'}`}
           >
             Compare
           </button>
           <button
             onClick={() => setActiveTab('ranking')}
-            className={`flex-1 py-1.5 text-center rounded ${activeTab === 'ranking' ? 'bg-[#C59B27] text-[#0B1320] font-bold' : 'text-stone-300'}`}
+            className={`flex-1 py-1.5 px-2 text-center rounded whitespace-nowrap ${activeTab === 'ranking' ? 'bg-[#C59B27] text-[#0B1320] font-bold' : 'text-stone-300'}`}
           >
             Top 10
+          </button>
+          <button
+            onClick={() => setActiveTab('suggestions')}
+            className={`flex-1 py-1.5 px-2 text-center rounded whitespace-nowrap ${activeTab === 'suggestions' ? 'bg-[#C59B27] text-[#0B1320] font-bold' : 'text-stone-300'}`}
+          >
+            Ideas ({suggestions.length})
+          </button>
+          <button
+            onClick={exportToCSV}
+            className="py-1.5 px-2 text-center rounded whitespace-nowrap text-stone-300 bg-stone-800 flex items-center gap-1 cursor-pointer"
+          >
+            <Download className="w-3 h-3 text-emerald-400" />
+            <span>CSV</span>
           </button>
         </div>
 
@@ -251,6 +413,8 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                   >
                     <option value="All">All Universities</option>
                     <option value="University of Rwanda">UR</option>
+                    <option value="University of Kigali">UoK</option>
+                    <option value="Mount Kigali">MKU</option>
                     <option value="ULK">ULK</option>
                     <option value="UNILAK">UNILAK</option>
                     <option value="INES">INES</option>
@@ -340,20 +504,32 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                     </p>
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs text-stone-500">Status:</span>
-                    <select
-                      value={currentApp.status}
-                      onChange={(e) => handleStatusChange(e.target.value as ApplicationStatus)}
-                      className="px-3 py-1.5 text-xs font-semibold bg-white border border-stone-300 rounded shadow-xs focus:outline-none"
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => forwardCandidateToEmail(currentApp)}
+                      className="px-3 py-1.5 text-xs font-semibold text-[#0B1320] bg-[#F7D875] hover:bg-[#E2B742] rounded shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                      title="Send this candidate's full profile & rubric to rwemera30@gmail.com"
                     >
-                      <option value="submitted">Submitted</option>
-                      <option value="under_review">Under Review</option>
-                      <option value="shortlisted">Shortlisted</option>
-                      <option value="interviewed">Interviewed</option>
-                      <option value="selected">Selected for Cohort I</option>
-                      <option value="declined">Declined</option>
-                    </select>
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>Email to Admissions Desk</span>
+                    </button>
+
+                    <div className="flex items-center space-x-1.5">
+                      <span className="text-xs text-stone-500">Status:</span>
+                      <select
+                        value={currentApp.status}
+                        onChange={(e) => handleStatusChange(e.target.value as ApplicationStatus)}
+                        className="px-3 py-1.5 text-xs font-semibold bg-white border border-stone-300 rounded shadow-xs focus:outline-none"
+                      >
+                        <option value="submitted">Submitted</option>
+                        <option value="under_review">Under Review</option>
+                        <option value="shortlisted">Shortlisted</option>
+                        <option value="interviewed">Interviewed</option>
+                        <option value="selected">Selected for Cohort I</option>
+                        <option value="declined">Declined</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 
@@ -872,6 +1048,121 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                   })}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {/* Tab 4: Suggestion Box Entries */}
+        {activeTab === 'suggestions' && (
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#FAF8F5]">
+            <div className="max-w-4xl mx-auto space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-xl border border-[#D5CEC0] shadow-xs">
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#8F6E15] font-semibold">
+                      Public Submissions & Feedback
+                    </span>
+                    <span className="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
+                      Linked to: {OFFICIAL_INBOX_EMAIL}
+                    </span>
+                  </div>
+                  <h4 className="text-xl font-serif font-bold text-[#0B1320] mt-1">
+                    Community Suggestion Box Repository
+                  </h4>
+                  <p className="text-xs text-stone-600 mt-1">
+                    Feedback, curriculum proposals, and jurist recommendations submitted by law students, advocates, and citizens.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`mailto:${OFFICIAL_INBOX_EMAIL}?subject=Indahiro%20Secretariat%20Inbox`}
+                    className="px-3.5 py-2 text-xs font-medium text-stone-800 bg-stone-100 hover:bg-stone-200 rounded border border-stone-300 flex items-center gap-1.5"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-[#8F6E15]" />
+                    <span>Open {OFFICIAL_INBOX_EMAIL}</span>
+                  </a>
+                </div>
+              </div>
+
+              {suggestions.length === 0 ? (
+                <div className="p-12 text-center bg-white rounded-xl border border-[#D5CEC0] space-y-3">
+                  <Inbox className="w-12 h-12 text-stone-300 mx-auto" />
+                  <h5 className="font-serif font-bold text-base text-stone-700">No Suggestions Submitted Yet</h5>
+                  <p className="text-xs text-stone-500 max-w-md mx-auto">
+                    When visitors or candidates submit recommendations via the Suggestion Box modal, they will be delivered to {OFFICIAL_INBOX_EMAIL} and archived here.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {suggestions.map((sug) => (
+                    <div
+                      key={sug.id}
+                      className="bg-white p-5 rounded-xl border border-[#D5CEC0] shadow-xs space-y-3"
+                    >
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-stone-200 pb-3 gap-2">
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs font-mono font-bold text-[#8F6E15] bg-[#F7D875]/20 px-2 py-0.5 rounded">
+                              {sug.id}
+                            </span>
+                            <span className="text-xs font-semibold text-[#0B1320] bg-stone-100 px-2 py-0.5 rounded">
+                              {sug.category}
+                            </span>
+                            <span className="text-[11px] text-stone-500 font-mono">
+                              {sug.affiliation}
+                            </span>
+                          </div>
+                          <h5 className="font-serif font-bold text-base text-[#0B1320] mt-1.5">
+                            {sug.subject}
+                          </h5>
+                        </div>
+                        <div className="text-right text-[11px] text-stone-500 font-mono">
+                          {new Date(sug.submittedAt).toLocaleString()}
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-stone-700 leading-relaxed whitespace-pre-wrap font-light">
+                        {sug.message}
+                      </p>
+
+                      <div className="pt-2 border-t border-stone-100 flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-stone-600 gap-2">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-semibold text-stone-800">
+                            {sug.isAnonymous ? 'Anonymous Contributor' : sug.name}
+                          </span>
+                          {!sug.isAnonymous && sug.email && (
+                            <>
+                              <span className="text-stone-400">·</span>
+                              <a
+                                href={`mailto:${sug.email}?subject=RE: Indahiro Suggestion [${sug.id}]`}
+                                className="text-[#8F6E15] hover:underline font-mono"
+                              >
+                                {sug.email}
+                              </a>
+                            </>
+                          )}
+                          {!sug.isAnonymous && sug.phone && (
+                            <>
+                              <span className="text-stone-400">·</span>
+                              <span className="font-mono">{sug.phone}</span>
+                            </>
+                          )}
+                        </div>
+
+                        {!sug.isAnonymous && sug.email && (
+                          <a
+                            href={`mailto:${sug.email}?subject=RE: Indahiro Suggestion [${sug.id}]: ${encodeURIComponent(sug.subject)}`}
+                            className="text-xs font-medium text-[#8F6E15] hover:text-[#0B1320] flex items-center gap-1"
+                          >
+                            <Mail className="w-3.5 h-3.5" />
+                            <span>Reply to Contributor</span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
