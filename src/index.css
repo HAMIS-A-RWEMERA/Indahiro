@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Cormorant Garamond', Georgia, Cambria, serif;
+  --font-display: 'Cinzel', serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --color-gold-light: #F7D875;
+  --color-gold: #E2B742;
+  --color-gold-core: #D5A52A;
+  --color-gold-dark: #B8871E;
+  --color-brand-dark: #0D0E11;
+  --color-brand-card: #13151B;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: #FDFCF9;
+    color: #111215;
+  }
+
+  h1, h2, h3, .font-serif-heading {
+    font-family: var(--font-serif);
+  }
+
+  .font-brand {
+    font-family: var(--font-sans);
+    font-weight: 900;
+    letter-spacing: 0.14em;
+  }
+
+  /* Custom gold text gradient matching the logo metallic foil */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #F7D875 0%, #E2B742 35%, #CA9928 75%, #F0CE67 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, #F5D268 0%, #E2B742 40%, #D5A52A 80%, #C99827 100%);
+  }
+
+  .border-gold-subtle {
+    border-color: rgba(226, 183, 66, 0.35);
+  }
+}
+
+

@@ -1,0 +1,8 @@
+{
+  "name": "Indahiro Fellowship",
+  "description": "A prestigious national fellowship for Rwanda\u0027s law students bridging legal theory and practical advocacy, moot court, mentorship, and professional readiness.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
