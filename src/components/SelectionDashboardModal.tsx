@@ -155,15 +155,18 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
     return matchesStatus && matchesUni && matchesSearch;
   });
 
-  // Calculate composite total
+  // Calculate composite total across 8 official criteria
   const getAppTotal = (app: ApplicationSubmission) => {
     const sc = app.scores;
     const writtenTotal =
-      (sc.analyticalReasoning || 0) +
-      (sc.advocacyPotential || 0) +
-      (sc.publicServiceIntegrity || 0) +
+      (sc.legalReasoning || 0) +
+      (sc.potential || 0) +
       (sc.commitmentDiscipline || 0) +
-      (sc.practicalScore || 0);
+      (sc.passionForPractice || 0) +
+      (sc.communicationAdvocacy || 0) +
+      (sc.intellectualCuriosity || 0) +
+      (sc.integrityJudgment || 0) +
+      (sc.leadershipService || 0);
     // If interview score exists (0-100), blend 60% written assessment + 40% interview
     if (app.interviewScore !== undefined) {
       return Math.round(writtenTotal * 0.6 + app.interviewScore * 0.4);
@@ -251,12 +254,15 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
       `Status: ${app.status.toUpperCase()}\n` +
       `GPA / Class: ${app.academic.gpaOrClass}\n` +
       `Total Rubric Score: ${getAppTotal(app)} / 100\n\n` +
-      `-- SCORES BREAKDOWN --\n` +
-      `Analytical Reasoning: ${app.scores.analyticalReasoning}/25\n` +
-      `Advocacy Potential: ${app.scores.advocacyPotential}/25\n` +
-      `Integrity & Ethics: ${app.scores.publicServiceIntegrity}/20\n` +
-      `Commitment: ${app.scores.commitmentDiscipline}/15\n` +
-      `Practical Score: ${app.scores.practicalScore}/15\n\n` +
+      `-- OFFICIAL RUBRIC BREAKDOWN (100% TOTAL) --\n` +
+      `1. Legal Reasoning & Competence (20%): ${app.scores.legalReasoning}/20\n` +
+      `2. Potential (20%): ${app.scores.potential}/20\n` +
+      `3. Commitment & Discipline (15%): ${app.scores.commitmentDiscipline}/15\n` +
+      `4. Passion for Legal Practice (15%): ${app.scores.passionForPractice}/15\n` +
+      `5. Communication & Advocacy (10%): ${app.scores.communicationAdvocacy}/10\n` +
+      `6. Intellectual Curiosity (10%): ${app.scores.intellectualCuriosity}/10\n` +
+      `7. Integrity & Professional Judgment (5%): ${app.scores.integrityJudgment}/5\n` +
+      `8. Leadership & Service Mindset (5%): ${app.scores.leadershipService}/5\n\n` +
       `-- MOTIVATION --\n` +
       `Why Indahiro:\n${app.motivation.whyIndahiro}\n\n` +
       `Specific Legal Problem in Rwanda:\n${app.motivation.legalProblemCareAbout}\n\n` +
@@ -706,60 +712,46 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                     
-                    {/* Dimension 1: Analytical Reasoning */}
+                    {/* Dimension 1: Legal Reasoning & Competence (20%) */}
                     <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
                       <div className="flex justify-between mb-1">
-                        <span className="text-stone-300 font-medium">1. Analytical Reasoning</span>
-                        <span className="font-mono text-[#E8C568]">{currentApp.scores.analyticalReasoning} / 25</span>
-                      </div>
-                      <input
-                        type="range"
-                        min={0}
-                        max={25}
-                        value={currentApp.scores.analyticalReasoning}
-                        onChange={(e) => handleScoreChange('analyticalReasoning', Number(e.target.value))}
-                        className="w-full accent-[#C59B27]"
-                      />
-                    </div>
-
-                    {/* Dimension 2: Advocacy & Moot Potential */}
-                    <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
-                      <div className="flex justify-between mb-1">
-                        <span className="text-stone-300 font-medium">2. Advocacy & Moot Potential</span>
-                        <span className="font-mono text-[#E8C568]">{currentApp.scores.advocacyPotential} / 25</span>
-                      </div>
-                      <input
-                        type="range"
-                        min={0}
-                        max={25}
-                        value={currentApp.scores.advocacyPotential}
-                        onChange={(e) => handleScoreChange('advocacyPotential', Number(e.target.value))}
-                        className="w-full accent-[#C59B27]"
-                      />
-                    </div>
-
-                    {/* Dimension 3: Public Service Integrity */}
-                    <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
-                      <div className="flex justify-between mb-1">
-                        <span className="text-stone-300 font-medium">3. Public Service & Integrity</span>
-                        <span className="font-mono text-[#E8C568]">{currentApp.scores.publicServiceIntegrity} / 20</span>
+                        <span className="text-stone-300 font-medium">1. Legal Reasoning (20%)</span>
+                        <span className="font-mono text-[#E8C568]">{currentApp.scores.legalReasoning} / 20</span>
                       </div>
                       <input
                         type="range"
                         min={0}
                         max={20}
-                        value={currentApp.scores.publicServiceIntegrity}
-                        onChange={(e) => handleScoreChange('publicServiceIntegrity', Number(e.target.value))}
+                        value={currentApp.scores.legalReasoning}
+                        onChange={(e) => handleScoreChange('legalReasoning', Number(e.target.value))}
                         className="w-full accent-[#C59B27]"
                       />
+                      <span className="text-[10px] text-stone-400 block mt-1">Can they understand, analyse & apply law?</span>
                     </div>
 
-                    {/* Dimension 4: Commitment & Discipline */}
+                    {/* Dimension 2: Potential (20%) */}
                     <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
                       <div className="flex justify-between mb-1">
-                        <span className="text-stone-300 font-medium">4. Commitment & Discipline</span>
+                        <span className="text-stone-300 font-medium">2. Potential (20%)</span>
+                        <span className="font-mono text-[#E8C568]">{currentApp.scores.potential} / 20</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={20}
+                        value={currentApp.scores.potential}
+                        onChange={(e) => handleScoreChange('potential', Number(e.target.value))}
+                        className="w-full accent-[#C59B27]"
+                      />
+                      <span className="text-[10px] text-stone-400 block mt-1">Could they become exceptional lawyer?</span>
+                    </div>
+
+                    {/* Dimension 3: Commitment & Discipline (15%) */}
+                    <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-stone-300 font-medium">3. Commitment (15%)</span>
                         <span className="font-mono text-[#E8C568]">{currentApp.scores.commitmentDiscipline} / 15</span>
                       </div>
                       <input
@@ -770,22 +762,92 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                         onChange={(e) => handleScoreChange('commitmentDiscipline', Number(e.target.value))}
                         className="w-full accent-[#C59B27]"
                       />
+                      <span className="text-[10px] text-stone-400 block mt-1">Will they do the demanding work?</span>
                     </div>
 
-                    {/* Dimension 5: Practical Case Assessment */}
-                    <div className="sm:col-span-2 bg-[#111C2E] p-3 rounded border border-stone-800">
+                    {/* Dimension 4: Passion for Legal Practice (15%) */}
+                    <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
                       <div className="flex justify-between mb-1">
-                        <span className="text-stone-300 font-medium">5. Practical Legal Reasoning Memo Assessment</span>
-                        <span className="font-mono text-[#E8C568]">{currentApp.scores.practicalScore} / 15</span>
+                        <span className="text-stone-300 font-medium">4. Practice Passion (15%)</span>
+                        <span className="font-mono text-[#E8C568]">{currentApp.scores.passionForPractice} / 15</span>
                       </div>
                       <input
                         type="range"
                         min={0}
                         max={15}
-                        value={currentApp.scores.practicalScore}
-                        onChange={(e) => handleScoreChange('practicalScore', Number(e.target.value))}
+                        value={currentApp.scores.passionForPractice}
+                        onChange={(e) => handleScoreChange('passionForPractice', Number(e.target.value))}
                         className="w-full accent-[#C59B27]"
                       />
+                      <span className="text-[10px] text-stone-400 block mt-1">Genuinely want to practise law?</span>
+                    </div>
+
+                    {/* Dimension 5: Communication & Advocacy (10%) */}
+                    <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-stone-300 font-medium">5. Advocacy (10%)</span>
+                        <span className="font-mono text-[#E8C568]">{currentApp.scores.communicationAdvocacy} / 10</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={10}
+                        value={currentApp.scores.communicationAdvocacy}
+                        onChange={(e) => handleScoreChange('communicationAdvocacy', Number(e.target.value))}
+                        className="w-full accent-[#C59B27]"
+                      />
+                      <span className="text-[10px] text-stone-400 block mt-1">Can they express & defend arguments?</span>
+                    </div>
+
+                    {/* Dimension 6: Intellectual Curiosity (10%) */}
+                    <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-stone-300 font-medium">6. Curiosity (10%)</span>
+                        <span className="font-mono text-[#E8C568]">{currentApp.scores.intellectualCuriosity} / 10</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={10}
+                        value={currentApp.scores.intellectualCuriosity}
+                        onChange={(e) => handleScoreChange('intellectualCuriosity', Number(e.target.value))}
+                        className="w-full accent-[#C59B27]"
+                      />
+                      <span className="text-[10px] text-stone-400 block mt-1">Question & learn beyond classroom?</span>
+                    </div>
+
+                    {/* Dimension 7: Integrity & Judgment (5%) */}
+                    <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-stone-300 font-medium">7. Integrity (5%)</span>
+                        <span className="font-mono text-[#E8C568]">{currentApp.scores.integrityJudgment} / 5</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={5}
+                        value={currentApp.scores.integrityJudgment}
+                        onChange={(e) => handleScoreChange('integrityJudgment', Number(e.target.value))}
+                        className="w-full accent-[#C59B27]"
+                      />
+                      <span className="text-[10px] text-stone-400 block mt-1">Trusted with responsibility?</span>
+                    </div>
+
+                    {/* Dimension 8: Leadership & Service (5%) */}
+                    <div className="bg-[#111C2E] p-3 rounded border border-stone-800">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-stone-300 font-medium">8. Service Mindset (5%)</span>
+                        <span className="font-mono text-[#E8C568]">{currentApp.scores.leadershipService} / 5</span>
+                      </div>
+                      <input
+                        type="range"
+                        min={0}
+                        max={5}
+                        value={currentApp.scores.leadershipService}
+                        onChange={(e) => handleScoreChange('leadershipService', Number(e.target.value))}
+                        className="w-full accent-[#C59B27]"
+                      />
+                      <span className="text-[10px] text-stone-400 block mt-1">Contribute to community & justice?</span>
                     </div>
 
                   </div>
@@ -981,12 +1043,15 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                     <div className="p-3 bg-stone-50 rounded border border-stone-200">
                       <span className="font-semibold text-stone-800 block mb-1">Rubric Breakdown:</span>
                       <div className="grid grid-cols-2 gap-2 text-[11px] text-stone-600 font-mono">
-                        <div>Analytical: {compareAppA.scores.analyticalReasoning}/25</div>
-                        <div>Advocacy: {compareAppA.scores.advocacyPotential}/25</div>
-                        <div>Integrity: {compareAppA.scores.publicServiceIntegrity}/20</div>
-                        <div>Discipline: {compareAppA.scores.commitmentDiscipline}/15</div>
-                        <div>Practical Memo: {compareAppA.scores.practicalScore}/15</div>
-                        <div>Interview: {compareAppA.interviewScore ?? 'N/A'}/100</div>
+                        <div>Legal Reasoning: {compareAppA.scores.legalReasoning}/20</div>
+                        <div>Potential: {compareAppA.scores.potential}/20</div>
+                        <div>Commitment: {compareAppA.scores.commitmentDiscipline}/15</div>
+                        <div>Passion: {compareAppA.scores.passionForPractice}/15</div>
+                        <div>Advocacy: {compareAppA.scores.communicationAdvocacy}/10</div>
+                        <div>Curiosity: {compareAppA.scores.intellectualCuriosity}/10</div>
+                        <div>Integrity: {compareAppA.scores.integrityJudgment}/5</div>
+                        <div>Leadership: {compareAppA.scores.leadershipService}/5</div>
+                        <div className="col-span-2 pt-1 border-t border-stone-200 text-[#8F6E15]">Interview: {compareAppA.interviewScore ?? 'N/A'}/100</div>
                       </div>
                     </div>
 
@@ -1042,12 +1107,15 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                     <div className="p-3 bg-stone-50 rounded border border-stone-200">
                       <span className="font-semibold text-stone-800 block mb-1">Rubric Breakdown:</span>
                       <div className="grid grid-cols-2 gap-2 text-[11px] text-stone-600 font-mono">
-                        <div>Analytical: {compareAppB.scores.analyticalReasoning}/25</div>
-                        <div>Advocacy: {compareAppB.scores.advocacyPotential}/25</div>
-                        <div>Integrity: {compareAppB.scores.publicServiceIntegrity}/20</div>
-                        <div>Discipline: {compareAppB.scores.commitmentDiscipline}/15</div>
-                        <div>Practical Memo: {compareAppB.scores.practicalScore}/15</div>
-                        <div>Interview: {compareAppB.interviewScore ?? 'N/A'}/100</div>
+                        <div>Legal Reasoning: {compareAppB.scores.legalReasoning}/20</div>
+                        <div>Potential: {compareAppB.scores.potential}/20</div>
+                        <div>Commitment: {compareAppB.scores.commitmentDiscipline}/15</div>
+                        <div>Passion: {compareAppB.scores.passionForPractice}/15</div>
+                        <div>Advocacy: {compareAppB.scores.communicationAdvocacy}/10</div>
+                        <div>Curiosity: {compareAppB.scores.intellectualCuriosity}/10</div>
+                        <div>Integrity: {compareAppB.scores.integrityJudgment}/5</div>
+                        <div>Leadership: {compareAppB.scores.leadershipService}/5</div>
+                        <div className="col-span-2 pt-1 border-t border-stone-200 text-[#8F6E15]">Interview: {compareAppB.interviewScore ?? 'N/A'}/100</div>
                       </div>
                     </div>
 
@@ -1162,11 +1230,14 @@ export const SelectionDashboardModal: React.FC<SelectionDashboardModalProps> = (
                             {app.personal.university.split('(')[0]}
                           </td>
                           <td className="py-3 px-4 text-center font-mono font-medium">
-                            {(app.scores.analyticalReasoning || 0) +
-                              (app.scores.advocacyPotential || 0) +
-                              (app.scores.publicServiceIntegrity || 0) +
+                            {(app.scores.legalReasoning || 0) +
+                              (app.scores.potential || 0) +
                               (app.scores.commitmentDiscipline || 0) +
-                              (app.scores.practicalScore || 0)}
+                              (app.scores.passionForPractice || 0) +
+                              (app.scores.communicationAdvocacy || 0) +
+                              (app.scores.intellectualCuriosity || 0) +
+                              (app.scores.integrityJudgment || 0) +
+                              (app.scores.leadershipService || 0)}
                           </td>
                           <td className="py-3 px-4 text-center font-mono">
                             {app.interviewScore !== undefined ? app.interviewScore : '—'}

@@ -54,9 +54,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenApplication }) =
             </p>
 
             <p className="mt-5 text-base sm:text-lg text-stone-300 max-w-2xl leading-relaxed font-light">
-              Indahiro bridges the gap between doctrinal legal education and elite practical readiness. 
-              An intensive, merit-based fellowship preparing Rwanda&apos;s most promising legal minds for 
-              courtrooms, chambers, prosecution desks, and international arbitration.
+              Building a generation of exceptional legal professionals who uphold justice, lead with integrity, and can compete anywhere in the world. 
+              An intensive investment selecting <strong className="text-white font-medium">exactly 10 fellows</strong> for our inaugural cohort—equipping Rwanda&apos;s most promising law students to excel in courtrooms, chambers, and global professional arenas.
             </p>
 
             {/* Two Prominent Action Buttons */}
@@ -111,7 +110,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenApplication }) =
               <h2 className="text-lg font-serif text-white font-medium">1. What is Indahiro?</h2>
             </div>
             <p className="text-sm text-stone-300 leading-relaxed font-light">
-              Rwanda&apos;s premier practical legal fellowship. A year-long, fully immersive program providing selected law students with intensive moot court advocacy, senior practitioner mentorship, courtroom shadowing, and real-world legal clinics.
+              Rwanda&apos;s premier practical legal fellowship. A selective, year-long investment developing exactly 10 fellows per cohort to compete at the highest domestic and international levels through intensive moot court advocacy, senior practitioner mentorship, and real-world legal clinics.
             </p>
           </div>
 
@@ -123,7 +122,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenApplication }) =
               <h2 className="text-lg font-serif text-white font-medium">2. Who is it for?</h2>
             </div>
             <p className="text-sm text-stone-300 leading-relaxed font-light">
-              Ambitious law students enrolled in Rwandan universities (UR, University of Kigali, Mount Kigali University, ULK, UNILAK, INES) who possess disciplined intellectual curiosity, competitive grit, integrity, and the drive to excel at the highest echelons of the legal profession.
+              Rwanda&apos;s most exceptional and promising law students enrolled across Rwandan faculties (UR, University of Kigali, Mount Kigali University, ULK, UNILAK, INES). Designed to identify potential without penalizing students who haven&apos;t had prior international exposure.
             </p>
           </div>
 
@@ -135,7 +134,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenApplication }) =
               <h2 className="text-lg font-serif text-white font-medium">3. Why should a law student care?</h2>
             </div>
             <p className="text-sm text-stone-300 leading-relaxed font-light">
-              Because a high GPA alone does not teach you how to survive an aggressive judicial bench or draft client-ready pleadings. Indahiro provides the verified practical credibility and network that guarantees day-one professional readiness.
+              Because understanding the law is not knowing how to use it. Indahiro provides courtroom poise, professional ethics, and cross-border advocacy competencies that enable Rwandan legal talent to compete anywhere in the world.
             </p>
           </div>
 

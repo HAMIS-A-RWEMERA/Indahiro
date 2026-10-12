@@ -52,6 +52,28 @@ export default function App() {
     localStorage.setItem(SUBMITTED_APPS_STORAGE_KEY, JSON.stringify(applications));
   }, [applications]);
 
+  // Stealth trigger: Keyboard shortcut (Ctrl + Shift + C) & URL query (?committee=auth)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+        e.preventDefault();
+        setIsDashboardModalOpen((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Check if query string includes committee trigger
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (searchParams.has('committee')) {
+        setIsDashboardModalOpen(true);
+      }
+    }
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleApplicationSubmit = (newApp: ApplicationSubmission) => {
     setApplications((prev) => [newApp, ...prev]);
     setToastMessage(`Application ${newApp.id} lodged successfully & sent to Admissions Desk.`);

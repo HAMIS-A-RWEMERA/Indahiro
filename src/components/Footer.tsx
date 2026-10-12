@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, MapPin, ArrowUpRight, Scale, ShieldCheck, MessageSquare } from 'lucide-react';
+import { Mail, MapPin, ArrowUpRight, Scale, MessageSquare } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface FooterProps {
@@ -53,13 +53,6 @@ export const Footer: React.FC<FooterProps> = ({
               >
                 <MessageSquare className="w-3.5 h-3.5 text-[#F7D875]" />
                 <span>Suggestion Box</span>
-              </button>
-              <button
-                onClick={onOpenDashboard}
-                className="px-3.5 py-2 text-xs text-stone-400 hover:text-white bg-[#12141B] border border-[#262B38] rounded transition-colors flex items-center gap-1.5 cursor-pointer"
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-[#E2B742]" />
-                <span>Committee Portal</span>
               </button>
             </div>
           </div>
@@ -193,8 +186,25 @@ export const Footer: React.FC<FooterProps> = ({
 
         {/* Bottom Tier: Institutional Attribution */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-500 font-mono gap-4">
-          <p>
-            © {new Date().getFullYear()} INDAHIRO FELLOWSHIP. ALL RIGHTS RESERVED. KIGALI, REPUBLIC OF RWANDA.
+          <p className="flex items-center flex-wrap">
+            <span>© {new Date().getFullYear()} INDAHIRO FELLOWSHIP. ALL RIGHTS RESERVED</span>
+            <button
+              onClick={onOpenDashboard}
+              className="text-stone-500 hover:text-stone-300 focus:outline-none cursor-pointer px-0.5 select-none transition-colors"
+              title="Restricted Jurist Console"
+              aria-label="Committee Authentication"
+            >
+              .
+            </button>
+            <span className="ml-1">KIGALI, REPUBLIC OF RWANDA.</span>
+            <button
+              onClick={onOpenDashboard}
+              className="text-stone-700 hover:text-stone-400 focus:outline-none cursor-pointer ml-2 text-[10px] select-none transition-colors"
+              title="Restricted Committee Portal"
+              aria-label="Committee Access"
+            >
+              [committee]
+            </button>
           </p>
           <p className="flex items-center gap-1.5">
             <Scale className="w-3.5 h-3.5 text-[#E2B742]" />

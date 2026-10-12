@@ -59,11 +59,14 @@ export type ApplicationStatus =
   | 'declined';
 
 export interface ApplicationScore {
-  analyticalReasoning: number; // 0 - 25
-  advocacyPotential: number; // 0 - 25
-  publicServiceIntegrity: number; // 0 - 20
-  commitmentDiscipline: number; // 0 - 15
-  practicalScore: number; // 0 - 15
+  legalReasoning: number; // 0 - 20 (Weight: 20%)
+  potential: number; // 0 - 20 (Weight: 20%)
+  commitmentDiscipline: number; // 0 - 15 (Weight: 15%)
+  passionForPractice: number; // 0 - 15 (Weight: 15%)
+  communicationAdvocacy: number; // 0 - 10 (Weight: 10%)
+  intellectualCuriosity: number; // 0 - 10 (Weight: 10%)
+  integrityJudgment: number; // 0 - 5 (Weight: 5%)
+  leadershipService: number; // 0 - 5 (Weight: 5%)
 }
 
 export interface ApplicationSubmission {

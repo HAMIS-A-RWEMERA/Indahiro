@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { Menu, X, ShieldCheck, MessageSquare } from 'lucide-react';
+import { Menu, X, MessageSquare } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface HeaderProps {
   onOpenApplication: () => void;
-  onOpenDashboard: () => void;
+  onOpenDashboard?: () => void;
   onOpenSuggestionBox: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenApplication,
-  onOpenDashboard,
   onOpenSuggestionBox,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -62,14 +61,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <MessageSquare className="w-3.5 h-3.5 text-[#F7D875]" />
               <span>Suggestion Box</span>
-            </button>
-            <button
-              onClick={onOpenDashboard}
-              className="px-3 py-2 text-xs font-medium text-stone-300 hover:text-white bg-[#151821] hover:bg-[#1E2330] border border-[#2B3040] rounded transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer"
-              title="Access Selection Committee Portal"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-[#E2B742]" />
-              <span>Committee Portal</span>
             </button>
             <button
               onClick={onOpenApplication}
@@ -128,16 +119,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <MessageSquare className="w-4 h-4 text-[#F7D875]" />
               <span>Suggestion Box (Secretariat)</span>
-            </button>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenDashboard();
-              }}
-              className="w-full py-2.5 text-xs font-medium text-stone-300 bg-[#151821] border border-[#2B3040] rounded flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <ShieldCheck className="w-4 h-4 text-[#E2B742]" />
-              <span>Selection Committee Portal</span>
             </button>
             <button
               onClick={() => {

@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { Sparkles, Target, Users2, Shield, HeartHandshake, Flame, BookCheck, Eye, Compass, Trophy } from 'lucide-react';
+import {
+  Sparkles,
+  Target,
+  Shield,
+  HeartHandshake,
+  Flame,
+  BookCheck,
+  Eye,
+  Compass,
+  Scale,
+  Award,
+  Users2,
+  CheckCircle2,
+} from 'lucide-react';
 
 interface WhoWeSelectProps {
   onOpenApplication: () => void;
@@ -8,78 +21,98 @@ interface WhoWeSelectProps {
 export const WhoWeSelectSection: React.FC<WhoWeSelectProps> = ({ onOpenApplication }) => {
   const [selectedPillar, setSelectedPillar] = useState<number>(0);
 
-  const pillars = [
+  const officialCriteria = [
     {
-      name: 'Passion',
-      icon: Flame,
-      summary: 'A palpable fire for the law as a living instrument of justice and national progress.',
-      detail:
-        'We do not seek students who view law merely as a credential or a title. We look for those who read judgments late into the night because they genuinely care about how legal principles govern human affairs.',
-    },
-    {
-      name: 'Competence',
+      name: 'Legal Reasoning & Competence',
+      weight: '20%',
+      weightNum: 20,
       icon: BookCheck,
-      summary: 'Sound doctrinal foundations and instinctive analytical clarity.',
+      question: 'Can they understand, analyse, and apply law?',
+      summary: 'Moving beyond memorisation to critical analysis and structured legal application.',
       detail:
-        'While grades alone do not define potential, candidates must demonstrate disciplined mastery of legal fundamentals and the ability to parse intricate statutory provisions without getting lost.',
+        'We test whether candidates can deconstruct statutory texts, synthesize judicial precedents, spot dispositive legal issues, and construct persuasive arguments under scrutiny rather than simply reciting lecture notes.',
+      assessmentMethod: 'Evaluated through the Practical Assessment Case Memorandum and legal problem diagnostic in the admissions portal.',
     },
     {
       name: 'Potential',
+      weight: '20%',
+      weightNum: 20,
       icon: Sparkles,
-      summary: 'Raw intellectual trajectory and capacity for rapid professional evolution.',
+      question: 'Could this person become an exceptional lawyer?',
+      summary: 'Investing in future excellence rather than simply measuring past opportunities or pedigree.',
       detail:
-        'We evaluate where you can be in five years under rigorous coaching, not merely what you have accomplished so far. We value steep growth curves over polished complacency.',
+        'Indahiro identifies raw intellectual capability, cognitive plasticity, and steep growth curves. We ask who this person will become after a year of intense mentorship and moot court simulations, not who had the most polished starting advantages.',
+      assessmentMethod: 'Assessed through academic trajectory, letters of recommendation, and oral interview panel evaluation.',
     },
     {
-      name: 'Commitment',
+      name: 'Commitment & Discipline',
+      weight: '15%',
+      weightNum: 15,
       icon: Target,
-      summary: 'Unyielding dedication to complete intensive fellowship deliverables alongside university degrees.',
+      question: 'Will they actually do the demanding work?',
+      summary: 'Reliability for sustained training, tight filing deadlines, and practical assignments.',
       detail:
-        'Indahiro requires 12 to 15 hours every week of rigorous research, memorial drafting, and courtroom simulations. Fellows never make excuses; they meet their obligations with honor.',
+        'The fellowship demands 12 to 15 hours each week of research, oral simulations, judicial visits, and clinic work alongside demanding degree studies. Candidates must demonstrate ironclad reliability and grit.',
+      assessmentMethod: 'Evaluated through past performance, referee verification, and verified extracurricular follow-through.',
     },
     {
-      name: 'Curiosity',
+      name: 'Passion for Legal Practice',
+      weight: '15%',
+      weightNum: 15,
+      icon: Flame,
+      question: 'Do they genuinely want to practise, not just collect a certificate?',
+      summary: 'A deep, palpable hunger to stand in courtrooms, advise clients, and serve justice.',
+      detail:
+        'Indahiro is not for resume collectors or passive credentials. We seek aspiring advocates, prosecutors, and corporate counsel whose heart beats for the adversarial courtroom, negotiations, and client advocacy.',
+      assessmentMethod: 'Gauged through the personal statement (“Why Indahiro & Why Legal Practice”) and admissions interview.',
+    },
+    {
+      name: 'Communication & Advocacy',
+      weight: '10%',
+      weightNum: 10,
+      icon: Scale,
+      question: 'Can they express and defend an argument in moot courts and oral advocacy?',
+      summary: 'Clarity of spoken and written prose, judicial responsiveness, and composure under pressure.',
+      detail:
+        'Lawyers win or lose on their ability to persuade. We assess oral articulation, ability to handle aggressive judicial questioning with poise, and precision in written briefs.',
+      assessmentMethod: 'Assessed through moot court experience records, written submissions, and live selection panel questioning.',
+    },
+    {
+      name: 'Intellectual Curiosity',
+      weight: '10%',
+      weightNum: 10,
       icon: Eye,
-      summary: 'Relentless drive to question assumptions and dig beneath the surface of legal doctrines.',
+      question: 'Do they question, research, and learn independently beyond what is taught in class?',
+      summary: 'Independent exploration of legal questions, comparative systems, and emerging jurisprudence.',
       detail:
-        'The best advocates are insatiably inquisitive. They ask why a rule was formulated, what socioeconomic reality it serves, and how comparative jurisdictions have resolved identical friction.',
+        'Exceptional lawyers read beyond the syllabus. They investigate why a statutory provision exists, examine how international arbitration resolves disputes, and actively study legal developments in Rwanda and the EAC.',
+      assessmentMethod: 'Evaluated through candidate essay on a specific Rwandan legal challenge and self-directed reading interests.',
     },
     {
-      name: 'Discipline',
-      icon: Shield,
-      summary: 'The monastic rigor to cite accurately, meet filing deadlines, and verify every authority.',
-      detail:
-        'In the legal profession, a missing citation or a missed deadline is fatal to a client’s cause. We cultivate an uncompromising standard of meticulous execution.',
-    },
-    {
-      name: 'Competitive Spirit',
-      icon: Trophy,
-      summary: 'The appetite to test arguments against the sharpest minds domestically and globally.',
-      detail:
-        'Fellows relish the adversarial tension of moot courts and courtroom cross-examinations. They do not shrink from intellectual confrontation; they thrive in it.',
-    },
-    {
-      name: 'Integrity',
+      name: 'Integrity & Professional Judgment',
+      weight: '5%',
+      weightNum: 5,
       icon: Compass,
-      summary: 'Unshakeable ethical spine that never bends to expediency or shortcuts.',
+      question: 'Can they be trusted with ethical responsibility?',
+      summary: 'An unshakeable ethical spine, confidentiality, and sound moral judgment.',
       detail:
-        'A brilliant lawyer without integrity is a danger to the republic. Indahiro fellows understand that their personal reputation and the integrity of the justice system are indivisible.',
+        'Legal brilliance without integrity is hazardous to clients and the republic. We look for candidates who honor confidentiality, respect truth, and cannot be swayed by expediency or shortcuts.',
+      assessmentMethod: 'Assessed through situational ethics questioning during interviews and confidential academic references.',
     },
     {
-      name: 'Willingness to Learn',
-      icon: Users2,
-      summary: 'Humility to absorb harsh judicial critique and dismantle flawed reasoning without ego.',
-      detail:
-        'When a Supreme Court judge shreds your legal memorial during a simulation, defensiveness is failure. Fellows absorb critique as invaluable fuel for refinement.',
-    },
-    {
-      name: 'Willingness to Serve',
+      name: 'Leadership & Service Mindset',
+      weight: '5%',
+      weightNum: 5,
       icon: HeartHandshake,
-      summary: 'A deep conviction that legal privilege carries a sacred duty to the public interest.',
+      question: 'Will they contribute to clients, communities, and the legal profession?',
+      summary: 'A conviction that legal training carries a duty of service to society.',
       detail:
-        'Excellence without social conscience is hollow. Every Indahiro fellow commits structured hours to pro bono legal aid clinics, protecting the rights of the indigent and vulnerable.',
+        'Indahiro Fellows lead by serving. Every fellow participates in supervised pro bono clinics, community legal education, and peer mentorship, contributing to Rwanda’s socioeconomic progress.',
+      assessmentMethod: 'Demonstrated through community service, university leadership, and pro bono motivation.',
     },
   ];
+
+  const currentCriterion = officialCriteria[selectedPillar];
 
   return (
     <section id="selection" className="py-24 bg-[#FAF8F4] text-[#1A1A1A] border-b border-[#E2DDD3]">
@@ -90,39 +123,41 @@ export const WhoWeSelectSection: React.FC<WhoWeSelectProps> = ({ onOpenApplicati
           <div className="flex items-center space-x-3 mb-3">
             <span className="w-8 h-[1.5px] bg-[#C59B27]" />
             <span className="text-xs uppercase tracking-[0.25em] text-[#8F6E15] font-semibold">
-              Admissions & Selection
+              Official Admissions & Selection
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#0B1320] font-semibold tracking-tight">
             Who We Select
           </h2>
           <p className="mt-4 text-base sm:text-lg text-stone-600 font-light leading-relaxed">
-            The fellowship is intentionally not an ordinary academic scholarship. We do not evaluate applicants through a narrow mechanical GPA formula.
+            The Indahiro Fellowship is an investment in human potential across Rwanda. We evaluate candidates through a standardized, transparent 8-dimension rubric totaling 100%.
           </p>
         </div>
 
-        {/* The Core Manifesto Statement Banner */}
-        <div className="bg-[#0B1320] text-white p-8 sm:p-12 rounded-xl border border-stone-800 shadow-xl mb-16 relative overflow-hidden">
+        {/* The Core Level Playing Field Manifesto Banner */}
+        <div className="bg-[#0B1320] text-white p-8 sm:p-12 rounded-2xl border border-stone-800 shadow-xl mb-16 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-[#C59B27]/10 rounded-full blur-3xl pointer-events-none" />
           <div className="max-w-4xl relative z-10">
             <div className="flex items-center space-x-2 text-[#E8C568] text-xs uppercase tracking-widest font-mono mb-4">
-              <span>The Indahiro Selection Philosophy</span>
+              <span>The Indahiro Selection Philosophy · Level Playing Field</span>
             </div>
             <blockquote className="text-2xl sm:text-3xl lg:text-4xl font-serif italic text-white leading-relaxed font-light">
-              &ldquo;We are not looking for the student with the longest transcript. 
-              We are looking for the student with the strongest potential to become an exceptional legal professional.&rdquo;
+              &ldquo;Indahiro is designed to identify potential, not simply reward the highest test scores or students who already had the greatest exposure or internship privileges.&rdquo;
             </blockquote>
 
             <div className="mt-8 pt-6 border-t border-stone-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center space-x-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <span className="text-xs text-stone-400">Inaugural Cohort Allocation:</span>
-                <span className="text-xs font-mono font-bold text-[#E8C568] px-2.5 py-1 bg-[#1A2638] rounded border border-[#2B3E5E]">
-                  Strictly 10 Fellows Nationwide
+                <span className="text-xs font-mono font-bold text-[#E8C568] px-3 py-1 bg-[#1A2638] rounded border border-[#2B3E5E]">
+                  Strictly 10 Fellows Nationwide (Highly Selective)
+                </span>
+                <span className="text-xs font-mono text-stone-400">
+                  · Total Rubric: 100%
                 </span>
               </div>
               <button
                 onClick={onOpenApplication}
-                className="text-xs font-semibold uppercase tracking-wider text-[#0B1320] bg-[#C59B27] hover:bg-[#E8C568] px-5 py-2.5 rounded transition-colors self-start sm:self-auto cursor-pointer"
+                className="text-xs font-semibold uppercase tracking-wider text-[#0B1320] bg-gradient-to-r from-[#F7D875] to-[#C59B27] hover:brightness-105 px-6 py-2.5 rounded shadow-sm transition-all self-start sm:self-auto cursor-pointer"
               >
                 Submit Application
               </button>
@@ -130,29 +165,34 @@ export const WhoWeSelectSection: React.FC<WhoWeSelectProps> = ({ onOpenApplicati
           </div>
         </div>
 
-        {/* The 10 Selection Pillars Interactive Matrix */}
+        {/* The 8 Official Selection Criteria (100% Total) */}
         <div>
-          <div className="mb-8">
-            <h3 className="text-xs uppercase tracking-widest text-[#8F6E15] font-semibold mb-1">
-              The Ten Foundations of Evaluation
-            </h3>
-            <p className="text-2xl font-serif font-semibold text-[#0B1320]">
-              What We Test and Value in Every Candidate
-            </p>
+          <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <h3 className="text-xs uppercase tracking-widest text-[#8F6E15] font-semibold mb-1">
+                Official Selection Criteria & Weights (100% Total)
+              </h3>
+              <p className="text-2xl font-serif font-semibold text-[#0B1320]">
+                Eight Dimensions of Comprehensive Evaluation
+              </p>
+            </div>
+            <div className="text-xs font-mono text-stone-600 bg-white px-3.5 py-1.5 rounded-full border border-stone-300 shadow-2xs self-start md:self-auto">
+              Sum of Weights = <span className="font-bold text-[#8F6E15]">100%</span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            {/* Left 7 Columns: Grid of 10 Pillars */}
+            {/* Left 7 Columns: Grid of 8 Criteria */}
             <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {pillars.map((pillar, idx) => {
-                const IconComponent = pillar.icon;
+              {officialCriteria.map((crit, idx) => {
+                const IconComponent = crit.icon;
                 const isSelected = selectedPillar === idx;
                 return (
                   <button
-                    key={pillar.name}
+                    key={crit.name}
                     onClick={() => setSelectedPillar(idx)}
-                    className={`p-4 text-left rounded-lg border transition-all cursor-pointer ${
+                    className={`p-4 text-left rounded-xl border transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-[#0B1320] text-white border-[#C59B27] shadow-md ring-1 ring-[#C59B27]/40'
                         : 'bg-white text-stone-900 border-[#E2DDD3] hover:border-stone-400 hover:bg-[#FAF8F5]'
@@ -161,52 +201,69 @@ export const WhoWeSelectSection: React.FC<WhoWeSelectProps> = ({ onOpenApplicati
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <IconComponent className={`w-4 h-4 ${isSelected ? 'text-[#E8C568]' : 'text-[#8F6E15]'}`} />
-                        <span className="text-sm font-semibold tracking-tight">{pillar.name}</span>
+                        <span className="text-xs font-bold tracking-tight">{crit.name}</span>
                       </div>
-                      <span className={`text-[10px] font-mono ${isSelected ? 'text-stone-400' : 'text-stone-400'}`}>
-                        {String(idx + 1).padStart(2, '0')}
+                      <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${
+                        isSelected ? 'bg-[#E2B742] text-[#0B1320]' : 'bg-[#F2EDE2] text-[#8F6E15]'
+                      }`}>
+                        {crit.weight}
                       </span>
                     </div>
+                    <p className={`text-[11px] font-medium italic mb-1.5 ${isSelected ? 'text-[#F7D875]' : 'text-stone-700'}`}>
+                      &ldquo;{crit.question}&rdquo;
+                    </p>
                     <p className={`text-xs leading-relaxed line-clamp-2 ${isSelected ? 'text-stone-300' : 'text-stone-600'}`}>
-                      {pillar.summary}
+                      {crit.summary}
                     </p>
                   </button>
                 );
               })}
             </div>
 
-            {/* Right 5 Columns: Active Pillar Deep Dive Card */}
+            {/* Right 5 Columns: Active Criterion Deep Dive Card */}
             <div className="lg:col-span-5 bg-white rounded-xl border border-[#E2DDD3] p-8 shadow-sm">
-              <div className="flex items-center space-x-2 text-xs font-mono text-[#8F6E15] uppercase tracking-wider mb-2">
-                <span>Evaluation Criterion · {String(selectedPillar + 1).padStart(2, '0')} / 10</span>
+              <div className="flex items-center justify-between text-xs font-mono text-[#8F6E15] uppercase tracking-wider mb-2">
+                <span>Criterion · {String(selectedPillar + 1).padStart(2, '0')} of 08</span>
+                <span className="font-bold bg-[#FAF6EE] text-[#8F6E15] px-2.5 py-0.5 rounded border border-[#EAE5DB]">
+                  Weight: {currentCriterion.weight}
+                </span>
               </div>
 
-              <h4 className="text-2xl font-serif font-bold text-[#0B1320] mb-3 flex items-center gap-2">
-                {pillars[selectedPillar].name}
+              <h4 className="text-2xl font-serif font-bold text-[#0B1320] mb-2 flex items-center gap-2">
+                {currentCriterion.name}
               </h4>
 
-              <div className="p-4 bg-[#F8F6F0] rounded-lg border border-[#EAE5DB] mb-6">
-                <p className="text-xs font-serif italic text-stone-700 leading-relaxed">
-                  &ldquo;{pillars[selectedPillar].summary}&rdquo;
+              <div className="p-4 bg-[#F8F6F0] rounded-lg border border-[#EAE5DB] mb-5">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-stone-500 block mb-1">
+                  Core Evaluation Question
+                </span>
+                <p className="text-sm font-serif italic font-medium text-[#0B1320] leading-relaxed">
+                  &ldquo;{currentCriterion.question}&rdquo;
                 </p>
               </div>
 
               <div className="space-y-4 text-xs text-stone-700 leading-relaxed">
-                <p>{pillars[selectedPillar].detail}</p>
-                <div className="pt-4 border-t border-stone-200">
+                <div>
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500 block mb-1">
+                    What Indahiro Looks For
+                  </span>
+                  <p>{currentCriterion.detail}</p>
+                </div>
+
+                <div className="pt-3 border-t border-stone-200">
                   <span className="text-[11px] font-semibold uppercase tracking-wider text-stone-500 block mb-1">
                     How This Is Assessed
                   </span>
                   <p className="text-stone-600">
-                    Evaluated through your written practical legal assessment, personal statement, references, and rigorous oral interview cross-examination with our selection committee.
+                    {currentCriterion.assessmentMethod}
                   </p>
                 </div>
               </div>
 
               <div className="mt-8 pt-6 border-t border-stone-200">
-                <div className="p-3 bg-[#0B1320] text-stone-200 rounded-lg text-[11px] flex items-center justify-between">
-                  <span className="text-stone-400">First Cohort Target:</span>
-                  <span className="text-[#E8C568] font-bold">10 Rwandan Law Fellows</span>
+                <div className="p-3.5 bg-[#0B1320] text-stone-200 rounded-lg text-[11px] flex items-center justify-between">
+                  <span className="text-stone-400">Cohort I Commitment:</span>
+                  <span className="text-[#E8C568] font-bold">10 Fellows · Fully Supported</span>
                 </div>
               </div>
             </div>
