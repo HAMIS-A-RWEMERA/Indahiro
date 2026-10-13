@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Sparkles,
   Target,
@@ -15,7 +16,7 @@ import {
 } from 'lucide-react';
 
 interface WhoWeSelectProps {
-  onOpenApplication: () => void;
+  onOpenApplication?: () => void;
 }
 
 export const WhoWeSelectSection: React.FC<WhoWeSelectProps> = ({ onOpenApplication }) => {
@@ -155,12 +156,12 @@ export const WhoWeSelectSection: React.FC<WhoWeSelectProps> = ({ onOpenApplicati
                   · Total Rubric: 100%
                 </span>
               </div>
-              <button
-                onClick={onOpenApplication}
-                className="text-xs font-semibold uppercase tracking-wider text-[#0B1320] bg-gradient-to-r from-[#F7D875] to-[#C59B27] hover:brightness-105 px-6 py-2.5 rounded shadow-sm transition-all self-start sm:self-auto cursor-pointer"
+              <Link
+                to="/apply"
+                className="text-xs font-semibold uppercase tracking-wider text-[#0B1320] bg-gradient-to-r from-[#F7D875] to-[#C59B27] hover:brightness-105 px-6 py-2.5 rounded shadow-sm transition-all self-start sm:self-auto cursor-pointer inline-block"
               >
                 Submit Application
-              </button>
+              </Link>
             </div>
           </div>
         </div>

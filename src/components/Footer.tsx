@@ -1,24 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Mail, MapPin, ArrowUpRight, Scale, MessageSquare } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface FooterProps {
-  onOpenApplication: () => void;
+  onOpenApplication?: () => void;
   onOpenDashboard: () => void;
   onOpenSuggestionBox: () => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  onOpenApplication,
   onOpenDashboard,
   onOpenSuggestionBox,
 }) => {
-  const emails = [
-    'indahirofellowship@gmail.com',
-    'niyonkuruclaude0002@gmail.com',
-    'theonestineunganase2@gmail.com',
-    'angelocalvin100@gmail.com',
-  ];
+  const OFFICIAL_EMAIL = 'indahirofellowship@gmail.com';
 
   return (
     <footer className="bg-[#08090C] text-stone-300 border-t border-[#1C202B] pt-16 pb-12">
@@ -30,7 +25,9 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Brand Column (5 cols) */}
           <div className="lg:col-span-5 space-y-4">
             <div className="mb-2">
-              <Logo variant="dark" mode="full" size="lg" />
+              <Link to="/" aria-label="Indahiro Fellowship Home">
+                <Logo variant="dark" mode="full" size="lg" />
+              </Link>
             </div>
             
             <p className="text-sm font-serif italic text-[#F7D875]">
@@ -41,12 +38,12 @@ export const Footer: React.FC<FooterProps> = ({
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-2.5">
-              <button
-                onClick={onOpenApplication}
-                className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0B0D11] bg-gradient-to-r from-[#F7D875] via-[#E2B742] to-[#D5A52A] hover:brightness-105 rounded transition-all cursor-pointer"
+              <Link
+                to="/apply"
+                className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#0B0D11] bg-gradient-to-r from-[#F7D875] via-[#E2B742] to-[#D5A52A] hover:brightness-105 rounded transition-all cursor-pointer inline-block"
               >
                 Apply for Fellowship
-              </button>
+              </Link>
               <button
                 onClick={onOpenSuggestionBox}
                 className="px-3.5 py-2 text-xs text-stone-300 hover:text-white bg-[#141823] hover:bg-[#1B2232] border border-[#2A3245] rounded transition-colors flex items-center gap-1.5 cursor-pointer"
@@ -64,44 +61,44 @@ export const Footer: React.FC<FooterProps> = ({
             </span>
             <ul className="space-y-2">
               <li>
-                <a href="#about" className="hover:text-white transition-colors">
+                <Link to="/" className="hover:text-white transition-colors">
+                  Home Overview
+                </Link>
+              </li>
+              <li>
+                <Link to="/about" className="hover:text-white transition-colors">
                   About Indahiro
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#journey" className="hover:text-white transition-colors">
+                <Link to="/journey" className="hover:text-white transition-colors">
                   The Fellowship Journey
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#selection" className="hover:text-white transition-colors">
-                  Who We Select
-                </a>
+                <Link to="/selection" className="hover:text-white transition-colors">
+                  Who We Select & Criteria
+                </Link>
               </li>
               <li>
-                <a href="#standard" className="hover:text-white transition-colors">
-                  The Indahiro Standard
-                </a>
-              </li>
-              <li>
-                <a href="#mentors" className="hover:text-white transition-colors">
+                <Link to="/mentors" className="hover:text-white transition-colors">
                   Mentors & Jurists
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#fellows" className="hover:text-white transition-colors">
-                  Cohort I Fellows
-                </a>
+                <Link to="/fellows" className="hover:text-white transition-colors">
+                  Cohort I Fellows & Alumni
+                </Link>
               </li>
               <li>
-                <a href="#partners" className="hover:text-white transition-colors">
-                  Institutional Partners
-                </a>
+                <Link to="/journal" className="hover:text-white transition-colors">
+                  Legal Gazette & Articles
+                </Link>
               </li>
               <li>
-                <a href="#alumni" className="hover:text-white transition-colors">
-                  Alumni Vision
-                </a>
+                <Link to="/apply" className="text-[#F7D875] hover:underline font-semibold transition-colors">
+                  Application Portal →
+                </Link>
               </li>
             </ul>
           </div>
@@ -112,40 +109,25 @@ export const Footer: React.FC<FooterProps> = ({
               Official Inquiries & Secretariat
             </span>
             
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex items-start space-x-2 text-stone-400">
                 <MapPin className="w-4 h-4 text-[#E2B742] mt-0.5 shrink-0" />
                 <span>Kigali, Rwanda</span>
               </div>
 
-              <div className="pt-2 space-y-2">
+              <div className="pt-1 space-y-1.5">
                 <span className="text-[11px] font-mono text-stone-400 block font-semibold">
-                  Official Secretariat & Committee Emails:
+                  Official Secretariat Email:
                 </span>
-                {emails.map((email, idx) => (
-                  <div key={email} className="flex items-center space-x-2">
-                    <Mail className={`w-3.5 h-3.5 shrink-0 ${idx === 0 ? 'text-[#F7D875]' : 'text-stone-500'}`} />
-                    <div className="flex items-center space-x-1.5 min-w-0">
-                      <a
-                        href={`mailto:${email}`}
-                        className={`transition-colors font-mono text-[11px] truncate ${
-                          idx === 0 ? 'text-[#F7D875] font-semibold hover:underline' : 'text-stone-300 hover:text-[#E2B742]'
-                        }`}
-                      >
-                        {email}
-                      </a>
-                      {idx === 0 ? (
-                        <span className="text-[9px] font-mono bg-[#E2B742]/20 text-[#F7D875] px-1 py-0.2 rounded shrink-0">
-                          Primary
-                        </span>
-                      ) : (
-                        <span className="text-[9px] font-mono text-stone-500 shrink-0">
-                          Committee
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                <div className="flex items-center space-x-2 p-2 bg-[#12151D] rounded border border-[#212634]">
+                  <Mail className="w-4 h-4 text-[#F7D875] shrink-0" />
+                  <a
+                    href={`mailto:${OFFICIAL_EMAIL}`}
+                    className="transition-colors font-mono text-xs text-[#F7D875] font-semibold hover:underline"
+                  >
+                    {OFFICIAL_EMAIL}
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -184,27 +166,19 @@ export const Footer: React.FC<FooterProps> = ({
 
         </div>
 
-        {/* Bottom Tier: Institutional Attribution */}
+        {/* Bottom Tier: Institutional Attribution with Wesley Steganography */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-stone-500 font-mono gap-4">
           <p className="flex items-center flex-wrap">
             <span>© {new Date().getFullYear()} INDAHIRO FELLOWSHIP. ALL RIGHTS RESERVED</span>
             <button
               onClick={onOpenDashboard}
-              className="text-stone-500 hover:text-stone-300 focus:outline-none cursor-pointer px-0.5 select-none transition-colors"
-              title="Restricted Jurist Console"
-              aria-label="Committee Authentication"
+              className="text-stone-500 hover:text-stone-400 focus:outline-none cursor-pointer px-0.5 select-none transition-colors"
+              title=""
+              aria-label="Institutional attribution period"
             >
               .
             </button>
             <span className="ml-1">KIGALI, REPUBLIC OF RWANDA.</span>
-            <button
-              onClick={onOpenDashboard}
-              className="text-stone-700 hover:text-stone-400 focus:outline-none cursor-pointer ml-2 text-[10px] select-none transition-colors"
-              title="Restricted Committee Portal"
-              aria-label="Committee Access"
-            >
-              [committee]
-            </button>
           </p>
           <p className="flex items-center gap-1.5">
             <Scale className="w-3.5 h-3.5 text-[#E2B742]" />
@@ -216,4 +190,3 @@ export const Footer: React.FC<FooterProps> = ({
     </footer>
   );
 };
-
